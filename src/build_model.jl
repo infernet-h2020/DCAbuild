@@ -1,0 +1,60 @@
+
+function build_model(fileseed::String, filefull::String, ctype::Symbol, L::Int64;
+		    filename_ins::String="LambdaOpen_LambdaExt.dat",
+		    filename_par::String="Parameters_PlmDCA.dat",
+		    Mtest::Int64=0)
+
+	if ctype != :amino && ctype != :nbase
+		error("Wrong second argument: choose between :amino and :nbase")
+		return
+	end
+	println("### Reading seed ###")
+	seed = readfull(fileseed, ctype=ctype)
+
+	println("### Inferring insertions penalties ###")
+	l_o, l_e = infer_ins_pen(seed, L)
+
+	println("### Inferring a Potts model using PlmDCA ###")
+	aligntmp = filter_insertions(seed)
+	println("Temporary FASTA alignment in ", aligntmp)
+	PlmData = PlmDCA.plmdca(aligntmp, theta=0.20)
+	print_results(filename_ins, l_o, l_e, filename_par, PlmData, ctype, L)
+
+	println("### Finding gap penalties ###")
+	println("WARNING: Reasonable values are obtained when using many (> 500) sequences")
+
+	full = readfull(filefull, ctype=ctype)
+	if Mtest == 0
+		Mtest = length(seed)
+		println("Using all seed sequences to get the gap penalties")
+	else
+		println("Using ", Mtest, " out of ", length(seed), " to get the gap penalties")
+	end
+	fulltmp = extract_full_seq(full, seed, Mtest)
+	println("Temporary full length sequences in ", fulltmp)
+
+	if ctype == :amino
+		q = 21
+	elseif ctype == :nbase
+		q = 5
+	end
+
+	mu = 0.00:0.50:4.00
+	muint = 0.00:0.50:4.00
+	d = zeros(length(mu),length(muint))
+	aseed = readfull(aligntmp, ctype=ctype)
+	for a in 1:length(mu)
+		for b in 1:length(muint)
+			filename_out = tempname()
+			filename_flag = tempname()
+			AlignPotts.align_all(q, L, filename_par, fulltmp, filename_ins, mu[a], muint[b]; typel=:plm, filename_flag=filename_flag, filename_align=aligntmp, filename_ins=fileseed, filename_out=filename_out)
+			tmpseed = readfull(filename_out, ctype=ctype)
+			d[a,b] = compute_average_dist(aseed, tmpseed)
+			#rm(filename_out)
+		end
+	end
+	display(d)
+	rm(fulltmp)
+	rm(aligntmp)
+
+end
