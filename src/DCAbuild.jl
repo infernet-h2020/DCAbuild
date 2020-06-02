@@ -1,17 +1,14 @@
 module DCAbuild
 #using AlignPotts
-using PlmDCA, FastaIO
+using PlmDCA, FastaIO, GaussDCA
 using Statistics, Printf, DelimitedFiles, Logging
-#using ExtractMacro, OffsetArrays
-#export Seq, palign
-#import Base.show
-#using Distributed
 
 
 include("insertions.jl")      # all insertions related functions
-include("utils.jl")	      # i/o functions,
+include("utils.jl")	          # i/o functions,
 include("build_model.jl")     # main script for learning a Potts model, insertion penalties and gap penalties
-
+include("fasta_utils.jl")	  # fasta utilities
+include("seed_align.jl")		  # pipeline to an aligned seed from an unaligned one
 
 function __init__()
 	if Sys.which("mafft") === nothing
