@@ -8,21 +8,22 @@ Installation
 
 The package relies on 2 external dependencies:
 
-1. the HMMER suite can be installed at http://hmmer.org/ (make sure that the executables
-are in your binary PATH). A `make install` should do it). Everything has
-been tested with HMMER 3.1b1, and 3.1b2, but later versions should be
+1. the HMMER suite can be installed at http://hmmer.org/ (make sure that the executables are in your binary PATH). A `make install` should do it). Everything
+has been tested with HMMER 3.1b1, and 3.1b2, but later versions should be
 (hopefully) backward compatibles.
 
 2. The MAFFT package can be installed at https://mafft.cbrc.jp/alignment/software/mafft-7.453-with-extensions-src.tgz
 (make sure that the executables are in your binary PATH)
 
-Once HMMER has been installed, the `Epistasis` package can be installed as a
-local package cloning the repo in a local folder:
+Once HMMER and MAFFT have been installed, the `DCAbuild` package can be installed either as local package cloning the repo in a local folder, or entering in the PackageManager (typing the `]` key) the follwing 4 packages in the exact header_order shown below:
 
 ```
-include("DCAbuild.jl")
-
+(@v1.?) pkg> add https://github.com/carlobaldassi/GaussDCA
+(@v1.?) pkg> add https://github.com/pagnani/PottsGauge
+(@v1.?) pkg> add https://github.com/pagnani/PlmDCA
+(@v1.2) pkg> add https://github.com/anna-pa-m/DCAbuild
 ```
+
 ## Usage
 ```
 DCAbuild.build_model("../test/PF00684/PF00684seed.ins",
