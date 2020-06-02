@@ -15,13 +15,13 @@ has been tested with HMMER 3.1b1, and 3.1b2, but later versions should be
 2. The MAFFT package can be installed at https://mafft.cbrc.jp/alignment/software/mafft-7.453-with-extensions-src.tgz
 (make sure that the executables are in your binary PATH)
 
-Once HMMER and MAFFT have been installed, the `DCAbuild` package can be installed either as local package cloning the repo in a local folder, or entering in the PackageManager (typing the `]` key) the follwing 4 packages in the exact header_order shown below:
+Once HMMER and MAFFT have been installed, the `DCAbuild` package can be installed either as local package cloning the repo in a local folder, or entering in the PackageManager (typing the `]` key) the follwing 4 packages in the exact header order shown below:
 
 ```
 (@v1.?) pkg> add https://github.com/carlobaldassi/GaussDCA
 (@v1.?) pkg> add https://github.com/pagnani/PottsGauge
 (@v1.?) pkg> add https://github.com/pagnani/PlmDCA
-(@v1.2) pkg> add https://github.com/anna-pa-m/DCAbuild
+(@v1.?) pkg> add https://github.com/anna-pa-m/DCAbuild (remember to add the correct name)
 ```
 
 ## Usage
