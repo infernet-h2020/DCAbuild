@@ -8,7 +8,7 @@ include("insertions.jl")      # all insertions related functions
 include("utils.jl")	          # i/o functions,
 include("build_model.jl")     # main script for learning a Potts model, insertion penalties and gap penalties
 include("fasta_utils.jl")	  # fasta utilities
-include("seed_align.jl")		  # pipeline to an aligned seed from an unaligned one
+include("seed_align.jl")	  # pipeline to an aligned seed from an unaligned one
 
 function __init__()
 	if Sys.which("mafft") === nothing
