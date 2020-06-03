@@ -29,7 +29,7 @@ function print_results(filename_ins::String, l_o::Array{Float64,1}, l_e::Array{F
     for i in 1:L
         @printf(file_ins, "%.4f\t%.4f\n", l_o[i], l_e[i])
     end
-
+    flush(file_ins)
     filep = open(filename_par, "w")
     if ctype == :amino
         q = 21
@@ -50,8 +50,8 @@ function print_results(filename_ins::String, l_o::Array{Float64,1}, l_e::Array{F
 
 end
 
-
-function readfull(filefull; ctype::Symbol="amino")
+"""
+function readfull(filefull; ctype::Symbol="amino", pos::Bool=true)
     ffull = FastaIO.FastaReader(filefull)
     dheader = Dict{String,String}()
     for (_name,seq) in ffull
@@ -59,24 +59,25 @@ function readfull(filefull; ctype::Symbol="amino")
         if occursin('|', name)
             (aux,name) = split(name, "|")
         end
-        #if occursin('/', name)
-        #    (name,aux) = split(name,"/")
-        #end
+        if occursin('/', name) && !pos
+            (name,aux) = split(name,"/")
+        end
         if !haskey(dheader,name)
             dheader[name] = seq
         end
     end
     close(ffull)
-    return dheader
+    dheader
 end
+"""
 
-function extract_full_seq(full::Dict, seed::Dict, Mtest::Int64)
+function extract_full_seq(full::Dict, seed::Dict, Mtest::Int64; ctype=:amino)
 
     dheader = Dict{String, String}()
 
     for (_name, seq) in seed
         name = String(split(_name)[1])
-        if occursin('/', name)
+        if occursin('/', name) && ctype == :amino
             (name,aux) = split(name, "/")
         end
         try
@@ -89,6 +90,7 @@ function extract_full_seq(full::Dict, seed::Dict, Mtest::Int64)
         end
     end
 
+    #println("tot full seq", length(full), "tot align seq", length(seed), "tot new dict", length(dheader))
     tmpname = tempname()
     fulltmp = open(tmpname, "w")
 

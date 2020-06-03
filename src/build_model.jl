@@ -11,8 +11,12 @@ function build_model(fileseed::String, filefull::String, ctype::Symbol, L::Int64
 		return
 	end
 	println("### Reading seed ###")
-	seed = readfull(fileseed, ctype=ctype)
-
+	if ctype == :nbase
+		print_pos = true
+	else
+		print_pos = false
+	end
+	seed = AlignPotts.readfull(fileseed, ctype=ctype, pos = true)
 	println("### Inferring insertions penalties ###")
 	l_o, l_e = infer_ins_pen(seed, L)
 
@@ -25,14 +29,14 @@ function build_model(fileseed::String, filefull::String, ctype::Symbol, L::Int64
 	println("### Finding gap penalties ###")
 	println("WARNING: Reasonable values are obtained when using many (> 500) sequences")
 
-	full = readfull(filefull, ctype=ctype)
+	full = AlignPotts.readfull(filefull, ctype=ctype, pos = print_pos)
 	if Mtest == 0
 		Mtest = length(seed)
 		println("Using all seed sequences to get the gap penalties")
 	else
 		println("Using ", Mtest, " out of ", length(seed), " to get the gap penalties")
 	end
-	fulltmp = extract_full_seq(full, seed, Mtest)
+	fulltmp = extract_full_seq(full, seed, Mtest, ctype=ctype)
 	println("Temporary full length sequences in ", fulltmp)
 
 	if ctype == :amino
@@ -44,15 +48,16 @@ function build_model(fileseed::String, filefull::String, ctype::Symbol, L::Int64
 	mu = 0.00:0.50:4.00
 	muint = 0.00:0.50:4.00
 	d = zeros(length(mu),length(muint))
-	aseed = readfull(aligntmp, ctype=ctype)
+	aseed = AlignPotts.readfull(aligntmp, ctype=ctype, pos = true)
 	for a in 1:length(mu)
 		for b in 1:length(muint)
 			filename_out = tempname()
 			filename_flag = tempname()
 			AlignPotts.align_all(q, L, filename_par, fulltmp, filename_ins, mu[a], muint[b]; typel=:plm, filename_flag=filename_flag, filename_align=aligntmp, filename_ins=fileseed, filename_out=filename_out)
-			tmpseed = readfull(filename_out, ctype=ctype)
+			tmpseed = AlignPotts.readfull(filename_out, ctype=ctype, pos = true)
 			d[a,b] = compute_average_dist(aseed, tmpseed)
-			#rm(filename_out)
+			rm(filename_out)
+			rm(filename_flag)
 		end
 	end
 	display(d)
