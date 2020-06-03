@@ -1,0 +1,23 @@
+name = "DCAbuild"
+uuid = "3d9eb81f-a87c-440f-9527-1ec03c67051d"
+authors = ["Anna Paola Muntoni"]
+version = "0.1.0"
+
+[deps]
+DelimitedFiles = "8bb1440f-4735-579b-a4ab-409b98df4dab"
+FastaIO = "a0c94c4b-ebed-5953-b5fc-82fe598ac79f"
+GaussDCA = "bc09176e-aa47-5a77-a802-92a0219fe3db"
+Logging = "56ddb016-857b-54e1-b83d-db4d58db5568"
+PlmDCA = "06784e46-84fc-5582-b8de-0e984192b79e"
+PottsGauge = "3bb3bcb6-c561-57d3-939c-408d524c1e5b"
+Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
+Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
+
+[compat]
+julia = "1.3.1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]

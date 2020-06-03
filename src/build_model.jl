@@ -1,3 +1,5 @@
+# take unaligned seed -> make a msa
+
 
 function build_model(fileseed::String, filefull::String, ctype::Symbol, L::Int64;
 		    filename_ins::String="LambdaOpen_LambdaExt.dat",
