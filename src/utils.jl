@@ -21,33 +21,47 @@ function filter_insertions(seed::Dict)
 end
 
 
-function print_results(filename_ins::String, l_o::Array{Float64,1}, l_e::Array{Float64,1}, filename_par::String, PlmData::Any, ctype::Symbol, L::Int64)
+function print_results(
+    filename_ins::String,
+    l_o::Array{Float64,1},
+    l_e::Array{Float64,1},
+    filename_par::String,
+    PlmData::Any,
+    ctype::Symbol,
+    L::Int64,
+)
 
 
     println("### Printing insertions penalties in ", filename_ins, " ###")
-    file_ins = open(filename_ins, "w")
-    for i in 1:L
-        @printf(file_ins, "%.4f\t%.4f\n", l_o[i], l_e[i])
+    open(filename_ins, "w") do file_ins
+        for i = 1:L
+            @printf(file_ins, "%.4f\t%.4f\n", l_o[i], l_e[i])
+        end
+        flush(file_ins)
+        filep = open(filename_par, "w")
+        if ctype == :amino
+            q = 21
+        elseif ctype == :nbase
+            q = 5
+        end
+        println("### Printing DCA model in ", filename_par, " ###")
+        for i = 1:L, j = i+1:L, a = 1:q, b = 1:q
+            @printf(
+                filep,
+                "J %d %d %d %d %f\n",
+                a,
+                b,
+                i,
+                j,
+                PlmData.Jtensor[a, b, i, j]
+            )
+        end
+        flush(filep)
+        for i = 1:L, a = 1:q
+            @printf(filep, "h %d %d %f\n", a, i, PlmData.htensor[a, i])
+        end
+        flush(filep)
     end
-    flush(file_ins)
-    filep = open(filename_par, "w")
-    if ctype == :amino
-        q = 21
-    elseif ctype == :nbase
-        q = 5
-    end
-
-
-    println("### Printing DCA model in ", filename_par, " ###")
-    for i in 1:L, j in i+1:L, a in 1:q, b in 1:q
-    	@printf(filep, "J %d %d %d %d %f\n", a,b,i,j,PlmData.Jtensor[a,b,i,j])
-    end
-    flush(filep)
-    for i in 1:L, a in 1:q
-    	@printf(filep, "h %d %d %f\n", a,i,PlmData.htensor[a,i])
-    end
-    flush(filep)
-
 end
 
 """

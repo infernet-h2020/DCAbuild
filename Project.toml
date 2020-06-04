@@ -4,6 +4,7 @@ authors = ["Anna Paola Muntoni"]
 version = "0.1.0"
 
 [deps]
+AlignPotts = "5080e834-9fbc-5f47-91a2-e4c0a2c1fd24"
 DelimitedFiles = "8bb1440f-4735-579b-a4ab-409b98df4dab"
 FastaIO = "a0c94c4b-ebed-5953-b5fc-82fe598ac79f"
 GaussDCA = "bc09176e-aa47-5a77-a802-92a0219fe3db"
