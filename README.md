@@ -34,7 +34,7 @@ julia> DCAbuild.build_model("../test/PF00684/PF00684seed.ins",
 ```
 2. Multi-core
 Start julia from the shell with `julia -p ncore` where `ncore` is the number of
-cores (tyicall `ncore ≤` number of physical core of the computer)
+cores (typically `ncore ≤` the number of physical core available)
 ```
 julia> @everwhere using DCAbuild
 julia> DCAbuild.build_model("../test/PF00684/PF00684seed.ins",
