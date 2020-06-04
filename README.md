@@ -25,12 +25,26 @@ Once HMMER and MAFFT have been installed, the `DCAbuild` package can be installe
 ```
 
 ## Usage
+
+1. Single-core:
 ```
-DCAbuild.build_model("../test/PF00684/PF00684seed.ins",
+julia> using DCAbuild
+julia> DCAbuild.build_model("../test/PF00684/PF00684seed.ins",
+                     "../test/PF00684/PF00684_full_length_sequences.fasta", :amino, 67)
+```
+2. Multi-core
+Start julia from the shell with `julia -p ncore` where `ncore` is the number of
+cores (tyicall `ncore ≤` number of physical core of the computer)
+```
+julia> @everwhere using DCAbuild
+julia> DCAbuild.build_model("../test/PF00684/PF00684seed.ins",
                      "../test/PF00684/PF00684_full_length_sequences.fasta", :amino, 67)
 ```
 
+
 This is a long run (it re-aligns all the seed sequences (~ 1500) for 81 times (i.e. all possible values of the gap penalties).
+
+##
 
 ## Faster run for debug
 Pick only `Mtest` sequences for determining the gap penalties

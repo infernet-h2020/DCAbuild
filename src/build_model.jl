@@ -23,7 +23,7 @@ function build_model(fileseed::String, filefull::String, ctype::Symbol, L::Int64
 	println("### Inferring a Potts model using PlmDCA ###")
 	aligntmp = filter_insertions(seed)
 	println("Temporary FASTA alignment in ", aligntmp)
-	PlmData = PlmDCA.plmdca(aligntmp, theta=0.20)
+	PlmData = PlmDCA.plmdca(aligntmp, theta=0.2)
 	print_results(filename_ins, l_o, l_e, filename_par, PlmData, ctype, L)
 
 	println("### Finding gap penalties ###")
@@ -45,11 +45,13 @@ function build_model(fileseed::String, filefull::String, ctype::Symbol, L::Int64
 		q = 5
 	end
 
-	mu = 0.00:0.50:4.00
-	muint = 0.00:0.50:4.00
+	# mu = 0.00:0.50:4.00
+	# muint = 0.00:0.50:4.00
+	mu = 0.00:1.00:3.00
+	muint = 0.00:1.00:3.00
 	d = zeros(length(mu),length(muint))
 	aseed = AlignPotts.readfull(aligntmp, ctype=ctype, pos = true)
-	for a in 1:length(mu)
+	@sync @distributed for a in 1:length(mu)
 		for b in 1:length(muint)
 			filename_out = tempname()
 			filename_flag = tempname()
@@ -63,5 +65,4 @@ function build_model(fileseed::String, filefull::String, ctype::Symbol, L::Int64
 	display(d)
 	rm(fulltmp)
 	rm(aligntmp)
-
 end

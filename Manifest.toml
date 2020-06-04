@@ -208,7 +208,7 @@ uuid = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 
 [[PlmDCA]]
 deps = ["Distributed", "FastaIO", "GaussDCA", "LinearAlgebra", "NLopt", "PottsGauge", "Printf", "Random", "SharedArrays", "Statistics", "Test"]
-git-tree-sha1 = "fd9f3469911e2bf11d5349d1001ce2c4c82ecd03"
+git-tree-sha1 = "256795e7f9d55ea5bd04f4d5a498e0cef031f500"
 repo-rev = "master"
 repo-url = "https://github.com/pagnani/PlmDCA.git"
 uuid = "06784e46-84fc-5582-b8de-0e984192b79e"
