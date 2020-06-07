@@ -2,7 +2,7 @@ module DCAbuild
 using AlignPotts
 #include("../../AlignPotts/src/AlignPotts.jl")
 using PlmDCA, FastaIO, GaussDCA
-using Statistics, Printf, DelimitedFiles, Logging, Distributed
+using Statistics, Printf, DelimitedFiles, Logging, Distributed,SharedArrays
 
 
 include("insertions.jl")      # all insertions related functions

@@ -49,7 +49,9 @@ function build_model(fileseed::String, filefull::String, ctype::Symbol, L::Int64
 	# muint = 0.00:0.50:4.00
 	mu = 0.00:1.00:3.00
 	muint = 0.00:1.00:3.00
-	d = zeros(length(mu),length(muint))
+	# mu = parameter for external gap
+	# muint = internal gaps
+	d = zeros(length(mu),length(muint)) |> SharedArray
 	aseed = AlignPotts.readfull(aligntmp, ctype=ctype, pos = true)
 	@sync @distributed for a in 1:length(mu)
 		for b in 1:length(muint)
