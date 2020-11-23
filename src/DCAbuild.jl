@@ -1,5 +1,5 @@
 module DCAbuild
-using AlignPotts
+using DCAlign
 #include("../../AlignPotts/src/AlignPotts.jl")
 using PlmDCA, FastaIO, GaussDCA
 using Statistics, Printf, DelimitedFiles, Logging
