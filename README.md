@@ -27,14 +27,14 @@ Once HMMER and MAFFT have been installed, the `DCAbuild` package can be installe
 Usage
 ============
 
-# Get aligned seed in proper format 
+## Get aligned seed in proper format 
 
-## Pfam or Rfam seed
+### Pfam or Rfam seed
 
 
-## Unaligned seed 
+### Unaligned seed 
 
-# Get the DCA model and the gap/insertion penalties
+## Get the DCA model and the gap/insertion penalties
 
 ```
 DCAbuild.build_model("../test/PF00684/PF00684seed.ins",
@@ -43,7 +43,7 @@ DCAbuild.build_model("../test/PF00684/PF00684seed.ins",
 
 This is a long run (it re-aligns all the seed sequences (~ 1500) for 81 times (i.e. all possible values of the gap penalties).
 
-## Faster run for debug
+### Faster run for debug
 Pick only `Mtest` sequences for determining the gap penalties
 ```
 DCAbuild.build_model("../test/PF00684/PF00684seed.ins",
