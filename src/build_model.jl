@@ -4,7 +4,8 @@
 function build_model(fileseed::String, filefull::String, ctype::Symbol, L::Int64;
 		    filename_ins::String="LambdaOpen_LambdaExt.dat",
 		    filename_par::String="Parameters_PlmDCA.dat",
-		    Mtest::Int64=0)
+		    Mtest::Int64=0,
+		    verbose::Bool=true)
 
 	if ctype != :amino && ctype != :nbase
 		error("Wrong second argument: choose between :amino and :nbase")
@@ -16,7 +17,7 @@ function build_model(fileseed::String, filefull::String, ctype::Symbol, L::Int64
 	else
 		print_pos = false
 	end
-	seed = AlignPotts.readfull(fileseed, ctype=ctype, pos = true)
+	seed = DCAlign.readfull(fileseed, ctype=ctype, pos = true)
 	println("### Inferring insertions penalties ###")
 	l_o, l_e = infer_ins_pen(seed, L)
 
@@ -29,7 +30,7 @@ function build_model(fileseed::String, filefull::String, ctype::Symbol, L::Int64
 	println("### Finding gap penalties ###")
 	println("WARNING: Reasonable values are obtained when using many (> 500) sequences")
 
-	full = AlignPotts.readfull(filefull, ctype=ctype, pos = print_pos)
+	full = DCAlign.readfull(filefull, ctype=ctype, pos = print_pos)
 	if Mtest == 0
 		Mtest = length(seed)
 		println("Using all seed sequences to get the gap penalties")
@@ -48,13 +49,13 @@ function build_model(fileseed::String, filefull::String, ctype::Symbol, L::Int64
 	mu = 0.00:0.50:4.00
 	muint = 0.00:0.50:4.00
 	d = zeros(length(mu),length(muint))
-	aseed = AlignPotts.readfull(aligntmp, ctype=ctype, pos = true)
+	aseed = DCAlign.readfull(aligntmp, ctype=ctype, pos = true)
 	for a in 1:length(mu)
 		for b in 1:length(muint)
 			filename_out = tempname()
 			filename_flag = tempname()
-			AlignPotts.align_all(q, L, filename_par, fulltmp, filename_ins, mu[a], muint[b]; typel=:plm, filename_flag=filename_flag, filename_align=aligntmp, filename_ins=fileseed, filename_out=filename_out)
-			tmpseed = AlignPotts.readfull(filename_out, ctype=ctype, pos = true)
+			DCAlign.align_all(q, L, filename_par, fulltmp, filename_ins, mu[a], muint[b]; typel=:plm, filename_flag=filename_flag, filename_align=aligntmp, filename_ins=fileseed, filename_out=filename_out, verbose = verbose)
+			tmpseed = DCAlign.readfull(filename_out, ctype=ctype, pos = true)
 			d[a,b] = compute_average_dist(aseed, tmpseed)
 			rm(filename_out)
 			rm(filename_flag)

@@ -53,28 +53,27 @@ function writefasta(fou::String,d::SimpleAlign)
 end
 
 """
-    function create_aligned_input(
+    function align_seed_mafft(
             fin::String,
             fou::String;
             nthreads::Integer = 8,
             thr_ins::Real = 1.0
         )
-Read `fin` full-length seed in fasta format and produces `fou.fasta` alignment
-and `fou.hmm` hmmer hmm. The pipeline runs `mafft-linsi`, then constructs a hmm
-through `hmmbuild` and realign `fin` with `hmmalign`.
+Read `fin` full-length seed in FASTA format and produces `fou.fasta` and `fou.ins` alignments.
+
 """
-function create_aligned_input(
+function align_seed_mafft(
     fin::String,
     fou::String;
-    nthreads::Integer = 8,
-    thr_ins::Real = 1.0,
+    nthreads::Integer = 1,
+    thr_ins::Real = 0.5,
 )
     mktempdir() do tmpdir
-        @info "working in $tmpdir"
-        linsiout = joinpath(tmpdir, "all.linsi.fasta")
-        @info "Aligning $fin with mafft-linsi. This may take a while ... "
+        @info "Working in $tmpdir"
+        linsiout = joinpath(tmpdir, "all_linsi.fasta")
+        @info "### Aligning $fin with mafft-linsi. This may take a while ... "
         linsi(fin, linsiout, nthreads = nthreads)
-        @info "alignment done!"
+        @info "Alignment done!"
         rescor = summary_align(linsiout)
         tmp_align = if thr_ins < 1.0 # make insertion by hand
             idxins = idx_insert(rescor, thr_ins)
@@ -82,12 +81,60 @@ function create_aligned_input(
         else
             SimpleAlign(rescor)
         end
-        file_tmp_align = joinpath(tmpdir, "tmp.linsi.fasta")
+        @info "Converting in FASTA (+ insertions) format"
+        file_tmp_align = joinpath(tmpdir, "tmp_linsi.fasta")
         writefasta(file_tmp_align, tmp_align)
-        hmmbuild(file_tmp_align, fou * ".hmm", nthreads = 1)
-        file_tmp_stk = joinpath(tmpdir, "tmp.linsi.stk")
-        hmmalign(fou * ".hmm", file_tmp_align, file_tmp_stk)
-        d = read_stockholm(file_tmp_stk)
-        writefasta(fou * ".fasta", d)
+        clean_align = extract_ins(file_tmp_align)
+        writefasta(fou * ".ins", clean_align)
+        clean_fasta, L = extract_align(clean_align)
+        @info "Converting in FASTA format"
+        writefasta(fou * ".fasta", clean_fasta)
+        @info "L = $L"
+        #@info "### Computing the HMM and re-aligning the seed"
+        ####### why do we need .hmm ? why do we re-align the seed? #######
+        #hmmbuild(file_tmp_align, fou * "_tmp.hmm", nthreads = 1)
+        #file_tmp_stk = joinpath(tmpdir, "tmp_linsi.stk")
+        #hmmalign(fou * "_tmp.hmm", fin, file_tmp_stk)
+        # here file_tmp_align -> fin. we should align the original sequences
+        # hmmalign(fou * ".hmm", file_tmp_align, file_tmp_stk)
+        #d = read_stockholm(file_tmp_stk)
+        #clean_seqs, g = extract_align(d)
+        #writefasta(fou * "_tmp.fasta", clean_seqs)
+        @info "Done!"
     end
+end
+
+
+"""
+    function align_seed_pfam(
+            fseqs::String,
+            fout::String;
+            nthreads::Integer = 8,
+        )
+Read `fseqs` full-length seed downloaded from Pfam, in Stockholm format. It produces `fou.fasta` and `fou.ins` alignments from the output of `hmmbuild`.
+
+"""
+
+function align_seed_pfam(
+    fseqs::String,
+    fou::String;
+    nthreads::Integer = 1,
+)
+
+    mktempdir() do tmpdir
+        @info "Working in $tmpdir"
+        @info "### Computing the HMM and get aligned seed (with and without insertions)"
+        hmmbuild(fseqs, joinpath(tmpdir, "tmp_stk.out"), joinpath(tmpdir, "tmp_stk.hmm"), nthreads = nthreads)
+        file_tmp_stk = joinpath(tmpdir, "tmp_stk.out")
+        d = read_stockholm(file_tmp_stk)
+        tmp, g = extract_align(d)
+        writefasta(joinpath(tmpdir, "tmp.fasta"), tmp)
+        clean_ins = extract_ins(joinpath(tmpdir, "tmp.fasta"))
+        clean_fasta, L = extract_align(clean_ins)
+        writefasta(fou * ".ins", clean_ins)
+        writefasta(fou * ".ins", clean_fasta)
+        @info "L = $L"
+        @info "Done!"
+    end
+
 end

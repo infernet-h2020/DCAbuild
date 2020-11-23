@@ -146,7 +146,7 @@ function compute_average_dist(trueseed::Dict, tmpseed::Dict)
             end
             if occursin(tmpname, name)
                 if abs(b-tmpb) < th && abs(en - tmpen) < th
-                    hd, tmp1, tmp2, tmp3 = AlignPotts.hammingdist(seq, tmpseq)
+                    hd, tmp1, tmp2, tmp3 = DCAlign.hammingdist(seq, tmpseq)
                     continue
                 end
             end

@@ -251,6 +251,77 @@ function read_stockholm(iFile::String)
     fasta_dict
 end
 
+
+function extract_ins(iFile::String)
+
+    f = FastaReader(iFile)
+    fasta_dict = Dict{String, String}()
+    for (name,line) in f
+        newline = replace(line, r"[.]" => s"")
+        f_match = 0
+        l_match = length(newline)
+        i = 1
+        idx_s = 0
+        idx_e = 0
+        count = 0
+        while i <= length(newline)
+            if newline[i] != '-'
+                count = count + 1
+            end
+            if (newline[i] == '-' || isuppercase(newline[i])) && idx_s == 0
+                idx_s = i
+            end
+            if isuppercase(newline[i]) && f_match == 0
+                f_match = count
+            end
+            i = i + 1
+        end
+        i = length(newline) 
+        count = count + 1
+        while i >= 1
+            if newline[i] != '-'
+                count = count - 1
+            end
+            if (newline[i] == '-' || isuppercase(newline[i])) && idx_e == 0
+                idx_e = i
+            end
+            if isuppercase(newline[i]) && l_match == length(newline)
+                l_match = count
+            end
+            i = i - 1
+        end
+        if occursin("/", name)
+            newname = name #pfam
+        else
+            newname = name * "/" * string(f_match) * "-" * string(l_match) #mafft
+        end
+        fasta_dict[newname] = newline[idx_s:idx_e]
+    end
+
+    return fasta_dict
+
+end
+
+function extract_align(f)
+
+    fasta_dict = Dict{String, String}()
+    L = 0
+    for (name,line) in f
+        line = replace(line, r"[.]" => s"")
+        newline = ""
+        for i = 1:length(line)
+            if !islowercase(line[i]) 
+                newline = newline * line[i]
+            end
+        end
+        L = length(newline)
+        fasta_dict[name] = newline
+    end
+
+    return fasta_dict, L
+
+
+end
 """
     linsi(iFile::String, oFile::String; nthread::Int=1 eFile::Union{String,Nothing}=nothing)
 
@@ -280,9 +351,11 @@ function linsi(
     end
 end
 
-function hmmbuild(iFile::String, oFile::String; nthreads::Int=1, symfrac::Float64=0.5)
-    run(pipeline(`hmmbuild --cpu $nthreads --symfrac $symfrac $oFile $iFile`, devnull))
+function hmmbuild(iFile::String, oFile::String, hmmFile::String; 
+                  nthreads::Int=1)
+    run(pipeline(`hmmbuild -O $oFile --cpu $nthreads $hmmFile $iFile`, devnull))
 end
+
 function hmmalign(hmmFile::String,iFile::String, oFile::String)
     run(pipeline(`hmmalign -o $oFile $hmmFile $iFile`, devnull))
 end
