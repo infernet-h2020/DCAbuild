@@ -24,7 +24,18 @@ Once HMMER and MAFFT have been installed, the `DCAbuild` package can be installe
 (@v1.?) pkg> add https://github.com/anna-pa-m/DCAbuild (remember to add the correct name)
 ```
 
-## Usage
+Usage
+============
+
+# Get aligned seed in proper format 
+
+## Pfam or Rfam seed
+
+
+## Unaligned seed 
+
+# Get the DCA model and the gap/insertion penalties
+
 ```
 DCAbuild.build_model("../test/PF00684/PF00684seed.ins",
                      "../test/PF00684/PF00684_full_length_sequences.fasta", :amino, 67)
