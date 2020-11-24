@@ -33,7 +33,7 @@ Usage
 
 ### Pfam seed
 
-Suppose that we need to learn the parameters describing a protein family whose seed alignment can be download from [Pfam](https://pfam.xfam.org/). We suggest to download the aligned seed from the section *Alignments* in Stockholm format, with mixed notation "." and "-", (an example of such files is provided in `test/PF00684/PF00684_seed.txt`) and to run
+Suppose that we need to learn the parameters describing a protein family whose seed alignment can be download from [Pfam](https://pfam.xfam.org/). We suggest to download the aligned seed from the section *Alignments* in Stockholm or FASTA format, with mixed notation "." and "-", (an example of such files is provided in `test/PF00684/PF00684_seed.txt`) and to run
 ```
 DCAbuild.align_seed_pfam(input_file, output_file)
 ```
@@ -69,7 +69,7 @@ To get the set of parameters characterizing the seed sequences, we need to run `
 This function produces:
 + `filename_ins` : a file containing the penalties of opening and extending an insertion in all the positions of the multiple sequence alignment (see [DCAlign](https://github.com/infernet-h2020/DCAlign) for further details). Default: `LambdaOpen_LambdaExt.dat`
 + `filename_par` : a file storing the DCA parameters learned from [PlmDCA](https://github.com/pagnani/PlmDCA). Default: `Parameters_PlmDCA.dat`
-+ `filename_gaps` : a file containing the values of the external and internal gap penalties (see [DCAlign](https://github.com/infernet-h2020/DCAlign) for further details). Default: `Gap_Ext_Int.dat`
++ `filename_gap` : a file containing the values of the external and internal gap penalties (see [DCAlign](https://github.com/infernet-h2020/DCAlign) for further details). Default: `Gap_Ext_Int.dat`
 
 ### Example
 
@@ -89,4 +89,4 @@ DCAbuild.build_model("../test/PF00684/PF00684seed.ins",
 
 ## RNA sequences
 
-The code is not yet able to cope with RNA sequences, we will provide soon an RNA counterpart of this procedure. Feel free to contact us if you would like to use [DCAlign](https://github.com/infernet-h2020/DCAlign) for this kind of data.
+The code is not yet able to cope with RNA sequences, we will provide soon an RNA counterpart of this procedure. Feel free to contact us if you are interested in using [DCAlign](https://github.com/infernet-h2020/DCAlign) for this kind of data.
