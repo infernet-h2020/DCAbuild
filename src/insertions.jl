@@ -42,7 +42,7 @@ end
 function maximum_likelihood(ins, L, nseq)
 
 maxit = 1e8
-tol = 1e-5
+tol = 1e-6
 eta = 1e-3
 lo0 = 0.0
 le0 = 0.0

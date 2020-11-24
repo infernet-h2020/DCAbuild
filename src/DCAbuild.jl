@@ -1,7 +1,7 @@
 module DCAbuild
 using DCAlign
 using PlmDCA, FastaIO, GaussDCA
-using Statistics, Printf, DelimitedFiles, Logging
+using Statistics, Printf, DelimitedFiles, Logging, StatsBase
 
 
 include("insertions.jl")      # all insertions related functions

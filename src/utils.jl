@@ -21,7 +21,7 @@ function filter_insertions(seed::Dict)
 end
 
 
-function print_results(filename_ins::String, l_o::Array{Float64,1}, l_e::Array{Float64,1}, filename_par::String, PlmData::Any, ctype::Symbol, L::Int64)
+function print_results(filename_ins::String, l_o::Array{Float64,1}, l_e::Array{Float64,1}, filename_par::String, PlmData::Any, ctype::Symbol, L::Int64, filename_gap::String, muext::Float64, muint::Float64)
 
 
     println("### Printing insertions penalties in ", filename_ins, " ###")
@@ -47,6 +47,11 @@ function print_results(filename_ins::String, l_o::Array{Float64,1}, l_e::Array{F
     	@printf(filep, "h %d %d %f\n", a,i,PlmData.htensor[a,i])
     end
     flush(filep)
+
+    println("### Printing gap penalties in ", filename_gap, " ###")
+    fileg = open(filename_gap, "w")
+    @printf(fileg, "%f %f\n", muext,muint)
+    flush(fileg)
 
 end
 
@@ -100,7 +105,7 @@ function extract_full_seq(full::Dict, seed::Dict, Mtest::Int64; ctype=:amino)
             @printf(fulltmp, "%s\n", seq)
         end
     else
-        idx = rand(1:length(seed), Mtest)
+        idx = sample(1:length(dheader), Mtest, replace= false)
         names = collect(keys(dheader))
         for i in 1:Mtest
             a = idx[i]

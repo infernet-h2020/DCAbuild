@@ -127,12 +127,12 @@ function align_seed_pfam(
         hmmbuild(fseqs, joinpath(tmpdir, "tmp_stk.out"), joinpath(tmpdir, "tmp_stk.hmm"), nthreads = nthreads)
         file_tmp_stk = joinpath(tmpdir, "tmp_stk.out")
         d = read_stockholm(file_tmp_stk)
-        tmp, g = extract_align(d)
-        writefasta(joinpath(tmpdir, "tmp.fasta"), tmp)
+        #tmp, g = extract_align(d)
+        writefasta(joinpath(tmpdir, "tmp.fasta"), d)
         clean_ins = extract_ins(joinpath(tmpdir, "tmp.fasta"))
         clean_fasta, L = extract_align(clean_ins)
         writefasta(fou * ".ins", clean_ins)
-        writefasta(fou * ".ins", clean_fasta)
+        writefasta(fou * ".fasta", clean_fasta)
         @info "L = $L"
         @info "Done!"
     end
