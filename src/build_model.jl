@@ -47,6 +47,7 @@ function build_model(fileseed::String, filefull::String, ctype::Symbol, L::Int64
 		q = 5
 	end
 
+	print_results(filename_ins, l_o, l_e, filename_par, PlmData, ctype, L, filename_gap, 0.0, 0.0) # tmp
 	mu = 0.00:0.50:4.00
 	muint = 0.00:0.50:4.00
 	d = zeros(length(mu),length(muint))
