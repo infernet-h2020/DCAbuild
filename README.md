@@ -19,7 +19,7 @@ Once HMMER and MAFFT have been installed, the `DCAbuild` package can be installe
 (@v1.?) pkg> add https://github.com/carlobaldassi/GaussDCA
 (@v1.?) pkg> add https://github.com/pagnani/PottsGauge
 (@v1.?) pkg> add https://github.com/pagnani/PlmDCA
-(@v1.?) pkg> add https://github.com/infernet-h2020/DCAlign
+(@v1.?) pkg> dev https://github.com/infernet-h2020/DCAlign
 (@v1.?) pkg> add https://github.com/infernet-h2020/DCAbuild
 (@v1.?) julia> using DCAbuild
 ```
