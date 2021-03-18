@@ -16,13 +16,15 @@ The package relies on two external dependencies:
 Once HMMER and MAFFT have been installed, the `DCAbuild` package can be installed either as a local package cloning the repo in a local folder, or entering in the PackageManager (typing the `]` key) the following five packages in the exact header order shown below:
 
 ```
-(@v1.?) pkg> add https://github.com/carlobaldassi/GaussDCA
-(@v1.?) pkg> add https://github.com/pagnani/PottsGauge
-(@v1.?) pkg> add https://github.com/pagnani/PlmDCA
-(@v1.?) pkg> dev https://github.com/infernet-h2020/DCAlign
-(@v1.?) pkg> add https://github.com/infernet-h2020/DCAbuild
-(@v1.?) julia> using DCAbuild
+(@v1.5.?) pkg> add StatsBase
+(@v1.5.?) pkg> add https://github.com/carlobaldassi/GaussDCA.jl
+(@v1.5.?) pkg> add https://github.com/pagnani/PottsGauge
+(@v1.5.?) pkg> add https://github.com/pagnani/PlmDCA
+(@v1.5.?) pkg> dev https://github.com/infernet-h2020/DCAlign
+(@v1.5.?) pkg> add https://github.com/infernet-h2020/DCAbuild
+(@v1.5.?) julia> using DCAbuild
 ```
+We suggest using Julia 1.5.4 or higher.
 
 Usage
 ============
@@ -76,14 +78,14 @@ This function produces:
 Using the files obtained through the pre-processing and the unaligned set of seed sequences, we can learn the parameters characterizing the `PF00684` family using
 
 ```
-DCAbuild.build_model("../test/PF00684/PF00684seed.ins",
+DCAbuild.build_model("../test/PF00684/PF00684_seed.ins",
                      "../test/PF00684/PF00684_full_length_sequences.fasta", :amino, 66)
 ```
 
 Pay attention that this is a very long run: to infer the gap penalties, it re-aligns all the seed sequences (~ 1500) for 81 times (i.e. all possible values of the gap penalties). We can choose of accelerating the process by reducing the number of sequences used within the training of the gap penalties setting the value of `Mtest` used for this task. In this case the run would be:
 
 ```
-DCAbuild.build_model("../test/PF00684/PF00684seed.ins",
+DCAbuild.build_model("../test/PF00684/PF00684_seed.ins",
                      "../test/PF00684/PF00684_full_length_sequences.fasta", :amino, 66, Mtest = Mtest)
 ```
 
